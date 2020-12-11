@@ -1,4 +1,0 @@
-## ignore files ##
-cmd
-db.sqlite3
-**/__pycache__/
