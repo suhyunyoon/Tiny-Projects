@@ -1,0 +1,14 @@
+body, html{
+	height: 100%;
+}
+body {
+	background-color: #f0f0f0;
+}
+
+.left-btn {
+	float: left;
+}
+
+.text-count {
+	float: right;
+}

@@ -1,0 +1,28 @@
+<!-- view/edit/awards.ejs -->
+
+<div class="container rounded p-4 bg-light">
+	<h2><%= title %></h2>
+	<br>
+	<p>학생 수상경력 및 자격증 <%= typeof(data)!=='undefined'? '수정' : '추가' %></p>
+	<br>
+	<form action="/awards/<%= userId %>" method="post">
+		<input type="hidden" id="id" name="id" value=<%= typeof(data)!=='undefined' ? data.id : '' %> />
+		<div class="form-group">
+	    	<label for="name">수상내역/자격증</label>
+	        <input type="text" id="name" name="name" value="<%= typeof(data)!=='undefined'? data.name : '' %>" class="form-control" required>
+	    </div>
+<div class="form-group">
+	    	<label for="institute">수여기관</label>
+	        <input type="text" id="institute" name="institute" value="<%= typeof(data)!=='undefined'? data.institute : '' %>" class="form-control" required>
+	    </div>
+		<div class="form-group">
+	    	<label for="date">수상/취득일</label>
+	        <input type="date" id="date" name="date" <%= typeof(data)!=='undefined'? 'value=' + data.date : '' %> class="form-control" required>
+	    </div>
+		<br> 
+    	<div>	
+       		<button type="submit" class="btn btn-primary"><%= typeof(data)!=='undefined'? '수정' : '추가' %></button>
+   		</div>
+	</form>
+
+</div>
