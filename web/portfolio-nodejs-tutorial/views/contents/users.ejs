@@ -1,0 +1,62 @@
+<!-- view/contents/users.ejs -->
+
+<div class="container">
+	<h2>학생 목록</h2>
+	<br>
+	<p>학생 목록입니다.</p>
+	<table class="table table-striped table-hover">
+	<thead>
+		<tr>
+		<th>이름</th>
+		<th>성별</th>
+		<th>생년월일</th>
+		<th>학교</th>
+		<th>학년</th>
+		<th>수정</th>
+		<th>삭제</th>
+		</tr>
+	</thead>
+	<tbody>
+	<% if(typeof(data) !== "undefined"){ %>
+	<% data.forEach(function (item,index){ %>
+	<tr>
+		<td>
+		<a href='/<%= item.id %>/campus'><%= item.name %></a>
+		</td>
+		<td>
+		<%= item.gender==1 ? '여' : '남' %>
+		</td>
+		<td class='date'>
+		<%= item.birth %>
+		</td>
+		<td>
+		<%= item.school %>
+		</td>
+		<td>
+		<%= (item.grade <= 6 ? '초등학교 ' + item.grade : 
+		(item.grade < 10 ? '중학교 ' + (item.grade-6) : '고등학교 ' + (item.grade-9)))+'학년' %>
+		</td>
+		<td>
+		<a href="/<%= item.id %>/users/edit">수정</a>
+		</td>	
+		<td>
+		<form id='frm-<%= item.id %>' action='/users/delete' method="post"> 
+			<input type='hidden' name='id' value=<%= item.id %> />
+			<a class="delete" id="-<%= item.id %>" href="#">삭제</a>
+		</form>
+		</td>	
+	</tr>
+		<% })%>
+	<% } %>
+	</tbody>
+	</table>
+	<div>
+	<a href="/new/users/edit"><button type="button" class="btn btn-primary left-btn">추가하기</button></a>
+	<p class="text-count">
+   		<%= data.length %> users. 
+    </p>
+
+	</div>
+
+</div>
+

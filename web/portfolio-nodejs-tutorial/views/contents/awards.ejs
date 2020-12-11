@@ -1,0 +1,51 @@
+<!-- view/awards.ejs -->
+
+<div class="container">
+	<h2><%= title %></h2>
+	<br>
+	<p>학생 수상경력 및 자격증 목록입니다.</p>
+	<table class="table table-striped table-hover">
+	<thead>
+		<tr>
+		<th>수상내역/자격증</th>
+		<th>수여기관</th>
+		<th>수상/취득일</th>
+		<th>삭제</th>
+		</tr>
+	</thead>
+	<tbody>
+	<% if(typeof(data) !== "undefined"){ %>
+	<% data.forEach(function (item,index){ %>
+<!-- id type startdate enddate text -->
+	<tr>
+		<td>
+		<a href='/<%= item.userId %>/awards/<%= item.id %>/edit'><%= item.name %></a>
+		</td>
+		<td>
+		<%= item.institute %>
+		</td>
+		<td class='date'>
+		<%= item.date %>
+		</td>
+		<td>
+		<form id='frm-<%= item.id %>' action='/awards/delete/<%= userId %>' method="post"> 
+			<input type='hidden' name='id' value=<%= item.id %> />
+			<a class="delete" id="-<%= item.id %>" href="#">삭제</a>
+		</form>
+		</td>
+	</tr>
+		<% })%>
+	<% } %>
+	</tbody>
+	</table>
+	<div>
+	<a href="/<%= userId %>/awards/new/edit"><button type="button" class="btn btn-primary left-btn">추가하기</button></a>
+	<p class="text-count">
+   		<%= data.length %> awards and certificates. 
+    </p>
+
+	</div>
+
+</div>
+
+

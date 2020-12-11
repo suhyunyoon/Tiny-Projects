@@ -1,0 +1,44 @@
+<!-- view/edit/users.ejs -->
+
+<div class="container rounded p-4 bg-light">
+	<h2><%= title %></h2>
+	<br>
+	<p> 학생 정보 <%= typeof(data)!=='undefined'? '수정' : '추가' %></p>
+	<br>
+	<form action="/users" method="post">
+		<input type="hidden" id="id" name="id" value=<%= typeof(data)!=='undefined' ? data.id : '' %> />
+		<div class="form-group">
+	    	<label for="name">이름</label>
+	        <input type="text" id="name" name="name" value="<%= typeof(data)!=='undefined'? data.name : '' %>" class="form-control" required>
+	    </div>
+		<div class="form-group">
+	    	<label for="gender">성별</label>
+			<br> 
+			<label for="gender-0"><input type="radio" name="gender" id="gender-0" value="0" checked="checked"/> 남</label>
+			<label for="gender-1"><input type="radio" name="gender" id="gender-1" value="1" <%= typeof(data)!=='undefined'? (data.gender==1 ? 'checked="checked"' : '') : '' %>/> 여</label>  
+		</div>
+		<div class="form-group">
+	    	<label for="birth">생년월일</label>
+	        <input type="date" id="birth" name="birth" <%= typeof(data)!=='undefined'? 'value=' + data.birth : '' %> class="form-control" required>
+	    </div>
+		<div class="form-group">
+	    	<label for="school">학교</label>
+	        <input type="text" id="school" name="school" value="<%= typeof(data)!=='undefined'? data.school : '' %>" class="form-control" required>
+	    </div>
+		<div class="form-group">
+	    	<label for="grade">학년</label>
+			<br> 
+			<label for="grade-0"><input type="radio" name="grade" id="grade-0" value="0" checked="checked"/>초등학교</label>
+			<label for="grade-1"><input type="radio" name="grade" id="grade-1" value="6" <%= typeof(data)!=='undefined'? (data.grade>6 && data.grade<10 ? 'checked="checked"' : '') : '' %>/>중학교</label>  
+			<label for="grade-2"><input type="radio" name="grade" id="grade-2" value="9" <%= typeof(data)!=='undefined'? (data.grade>9 && data.grade<=12 ? 'checked="checked"' : '') : '' %>/>고등학교</label>  
+		<input type="number" name="gradenum" id="gradenum" min="1" max="6" <%= typeof(data)!=='undefined'? 'value=' + (data.grade <= 6 ? data.grade : (data.grade <= 9 ? data.grade-6 : data.grade-9)) : '' %> required /> <label for="gradenum">학년</label>
+
+		</div>
+
+		<br> 
+    	<div>	
+       		<button type="submit" class="btn btn-primary"><%= typeof(data)!=='undefined'? '수정' : '추가' %></button>
+   		</div>
+	</form>
+
+</div>
