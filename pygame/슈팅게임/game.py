@@ -51,8 +51,7 @@ C = Character(screen_width, screen_height)
 rock_list = [Rock(screen_width, screen_height, random.choice(rock_imgs)) for i in range(8)]
 
 # 적 기체
-enemy_list = [Enemy(screen_width, screen_height, enemy),
-              Enemy(screen_width, screen_height, enemy)]
+enemy_list = [Enemy(screen_width, screen_height, enemy)]
 
 # 탄환
 bullet_list = []
@@ -60,6 +59,7 @@ enemy_bullet_list = []
 
 # 게임 시작
 score = 0
+next_phase = 10
 run = True
 while run:
     dt = clock.tick(60)
@@ -112,7 +112,7 @@ while run:
         e.shoot(enemy_bullet_list)
     # enemy bullet
     for i, b in enumerate(enemy_bullet_list):
-        enemy_bullet_list[i][1] += 1 * dt
+        enemy_bullet_list[i][1] += 0.3 * dt
 
     # 화면 밖으로 나가는 지 검사
     # 캐릭터
@@ -128,16 +128,8 @@ while run:
 
     # 돌이 화면 밖으로 나가면 리스트에서 remove
     for r in rock_list:
-        # 좌우로 나감
-        if r.x_pos < 0 - r.width or r.x_pos > screen_width:
-            r_init_speed = r.init_speed
-            r_acc = r.acc
-            rock_list.remove(r)
-            rock_list.append(Rock(screen_width, screen_height, random.choice(rock_imgs),
-                                  r_init_speed, r_acc))
-            
-        # 아래로 나감
-        elif r.y_pos > screen_height:
+        # 좌우 또는 dkfo로 나감
+        if r.x_pos < 0 - r.width or r.x_pos > screen_width or r.y_pos > screen_height:
             r_init_speed = r.init_speed
             r_acc = r.acc
             rock_list.remove(r)
@@ -148,7 +140,7 @@ while run:
     for b in bullet_list:
         if b[1] < -15:
             bullet_list.remove(b)
-    # 적의 총알이 화면 위로 나가면 리스트에서 remove
+    # 적의 총알이 화면 아래로 나가면 리스트에서 remove
     for b in enemy_bullet_list:
         if b[1] > screen_height:
             enemy_bullet_list.remove(b)
@@ -176,7 +168,7 @@ while run:
             if r.rect.colliderect(b_rect):
                 # 격파한 Rock은 새로 만들어질 때 init_speed와 acc를 1.1배 곱해서 새로 생성
                 r_init_speed = r.init_speed * 1.1
-                r_acc = r.acc * 1.1
+                r_acc = r.acc
                 rock_list.remove(r)
                 bullet_list.remove(b)
                 rock_list.append(Rock(screen_width, screen_height,
@@ -197,7 +189,7 @@ while run:
                 bullet_list.remove(b)
                 if not e.alive:
                     enemy_list.remove(e)
-                    enemy_list.append(Enemy(screen_width, screen_height, enemy))
+                    score += 5
                     enemy_list.append(Enemy(screen_width, screen_height, enemy))
 
     # enemy bullet과의 충돌 처리
@@ -212,6 +204,10 @@ while run:
             if not C.alive:
                 run = False
 
+    # 페이즈마다 적 추가
+    if score >= next_phase:
+        next_phase *= 2
+        enemy_list.append(Enemy(screen_width, screen_height, enemy))
     
     # 화면에 그림 출력
     screen.blit(background, (0,0))

@@ -115,7 +115,7 @@ class Enemy:
             self.alive = False
 
     def shoot(self, enemy_bullet_list):
-        if pygame.time.get_ticks() - self.last_shoot > 500:
+        if pygame.time.get_ticks() - self.last_shoot > 1500:
             b_x_pos = self.x_pos + 15
             b_y_pos = self.y_pos + self.height
             enemy_bullet_list.append([b_x_pos, b_y_pos])
