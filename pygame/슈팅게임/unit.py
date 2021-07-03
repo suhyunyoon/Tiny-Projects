@@ -53,22 +53,20 @@ class Character:
 # Rock이 떨어짐
 # Rock이 화면 밖으로 나가면 배열에서 삭제
 # 캐릭터랑 부딪히면 게임종료
-rock_imgs = ['rock1.png', 'rock2.png', 'rock3.png']
 class Rock:
-    def __init__(self, screen_width, screen_height):
-        self.img = pygame.image.load(random.choice(rock_imgs))
-        self.img = pygame.transform.scale(self.img, (50,50))
+    def __init__(self, screen_width, screen_height, rock, init_speed=0.1, acc=0.002):
+        self.img = rock
         # 크기 정보
         self.size = self.img.get_rect().size
         self.width = self.size[0]
         self.height = self.size[1]
         # 속도
-        self.init_speed = 0.1
+        self.init_speed = init_speed
         self.speed = self.init_speed
         self.x_speed = (random.random() - 0.5) / 10
 
         # 가속도
-        self.acc = 0.002
+        self.acc = acc
         
         # 위치
         self.x_pos = random.randrange(0, screen_width - self.width)
@@ -85,4 +83,48 @@ class Rock:
         self.rect = self.img.get_rect()
         self.rect.left = self.x_pos
         self.rect.top = self.y_pos
+
+# 적 기체
+class Enemy:
+    def __init__(self, screen_width, screen_height, img):
+        self.img = img
+        self.size = self.img.get_rect().size
+        self.width = self.size[0]
+        self.height = self.size[1]
+
+        self.life = 5
+        self.alive = True
+
+        self.x_pos = random.randrange(0, screen_width - self.width)
+        self.y_pos = - self.height
+        self.speed = 0.4
+        self.acc = -0.005
+
+        self.y_limit = 120
+
+        self.last_shoot = 0
+
+    def move(self, dt):
+        if self.y_pos < self.y_limit:
+            self.y_pos += self.speed * dt
+            self.speed += self.acc
+
+    def hit(self, damage):
+        self.life -= damage
+        if self.life <= 0:
+            self.alive = False
+
+    def shoot(self, enemy_bullet_list):
+        if pygame.time.get_ticks() - self.last_shoot > 500:
+            b_x_pos = self.x_pos + 15
+            b_y_pos = self.y_pos + self.height
+            enemy_bullet_list.append([b_x_pos, b_y_pos])
+            
+            self.last_shoot = pygame.time.get_ticks()
+            
+    def get_rect(self):
+        self.rect = self.img.get_rect()
+        self.rect.left = self.x_pos
+        self.rect.top = self.y_pos
+        
         
