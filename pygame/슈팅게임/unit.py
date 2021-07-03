@@ -11,9 +11,9 @@ class Character:
         self.width = self.size[0]
         self.height = self.size[1]
         # 속도
-        self.speed = 0.4
-        self.to_x = 0
-        self.to_y = 0
+        self.speed = 0.35
+        self.to_left, self.to_right = 0, 0
+        self.to_up, self.to_down = 0, 0
         # 위치
         self.x_pos = (screen_width - self.width) // 2
         self.y_pos = screen_height - self.height
@@ -21,18 +21,28 @@ class Character:
         self.life = 3
         self.alive = True
         self.last_hit = 0
+        # Fire
+        self.fire = False
+        self.last_fire = 0
 
     def move(self, dt):
         # 실제 이동
-        self.x_pos += self.to_x * dt
-        self.y_pos += self.to_y * dt
+        to_x = (self.to_right - self.to_left) * dt
+        to_y = (self.to_down - self.to_up) * dt
+        if self.fire:
+            to_x /= 1.5
+            to_y /= 1.5
+        self.x_pos += to_x
+        self.y_pos += to_y
 
     # 발사
     def shoot(self, bullet_list):
-        # 현재 위치에서 총알 추가
-        x_pos = self.x_pos + self.width // 2
-        y_pos = self.y_pos - 15
-        bullet_list.append([x_pos, y_pos])
+        if pygame.time.get_ticks() - self.last_fire >= 200:
+            # 현재 위치에서 총알 추가
+            x_pos = self.x_pos + self.width // 2
+            y_pos = self.y_pos - 15
+            bullet_list.append([x_pos, y_pos])
+            self.last_fire = pygame.time.get_ticks()
 
     # 피격
     def hit(self, damage):

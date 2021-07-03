@@ -72,16 +72,16 @@ while run:
         # 키를 눌렀을 때
         if e.type == pygame.KEYDOWN:
             if e.key == pygame.K_LEFT:
-                C.to_x -= C.speed
+                C.to_left += C.speed
             if e.key == pygame.K_RIGHT:
-                C.to_x += C.speed
+                C.to_right += C.speed
             if e.key == pygame.K_UP:
-                C.to_y -= C.speed
+                C.to_up += C.speed
             if e.key == pygame.K_DOWN:
-                C.to_y += C.speed
+                C.to_down += C.speed
             # 탄환 발사
             if e.key == pygame.K_SPACE:
-                C.shoot(bullet_list)
+                C.fire = True
         '''
         # 마우스 클릭했을 때
         if e.type == pygame.MOUSEBUTTONDOWN:
@@ -92,13 +92,21 @@ while run:
                 
         # 키를 뗐을 때
         if e.type == pygame.KEYUP:
-            if e.key == pygame.K_LEFT or e.key == pygame.K_RIGHT:
-                C.to_x = 0
-            if e.key == pygame.K_UP or e.key == pygame.K_DOWN:
-                C.to_y = 0
-
+            if e.key == pygame.K_LEFT:
+                C.to_left = 0
+            if e.key == pygame.K_RIGHT:
+                C.to_right = 0
+            if e.key == pygame.K_UP:
+                C.to_up = 0
+            if e.key == pygame.K_DOWN:
+                C.to_down = 0
+            if e.key == pygame.K_SPACE:
+                C.fire = False
     # 이동
     C.move(dt)
+    # Fire
+    if C.fire:
+        C.shoot(bullet_list)
     # rock
     for r in rock_list:
         r.move(dt)
@@ -149,15 +157,7 @@ while run:
     C.get_rect()
     for r in rock_list:
         r.get_rect()
-        if C.rect.colliderect(r.rect):
-            # 피해
-            C.hit(1)
-            # 게임 종료
-            if not C.alive:
-                run = False
-            rock_list.remove(r)
-            rock_list.append(Rock(screen_width, screen_height, random.choice(rock_imgs)))
-
+        
         # 총알과 운석 충돌 - 부딛힌 총알&운석 remove
         for b in bullet_list:
             # 총알 사각형 정보
@@ -174,6 +174,18 @@ while run:
                 rock_list.append(Rock(screen_width, screen_height,
                                       random.choice(rock_imgs), r_init_speed, r_acc))
                 score += 1
+                continue
+
+        # 캐릭터와 충돌
+        if C.rect.colliderect(r.rect):
+            # 피해
+            C.hit(1)
+            # 게임 종료
+            if not C.alive:
+                run = False
+            rock_list.remove(r)
+            rock_list.append(Rock(screen_width, screen_height, random.choice(rock_imgs)))
+            continue
 
     # Enemy와의 충돌 처리
     for e in enemy_list:
